@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
         no_proxy: 'localhost,127.0.0.1,.example.com'
       }
       ansible.inventory_path = 'inventories/staging'
-      ansible.verbose = 'vvvv'
+      ansible.verbose = 'v'
     end
   end
 
