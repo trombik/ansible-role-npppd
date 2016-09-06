@@ -8,9 +8,5 @@
     no_proxy: "{{ no_proxy | default() }}"
 
   pre_tasks:
-    - shell: echo "net.pipex.enable=1"; echo "net.inet.ip.forwarding=1" > /etc/sysctl.conf
-      changed_when: false
-    - shell: sysctl net.pipex.enable=1; sysctl net.inet.ip.forwarding=1
-      changed_when: false
   roles:
     - role: ansible-role-pf
