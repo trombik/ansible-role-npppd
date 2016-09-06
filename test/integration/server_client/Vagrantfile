@@ -62,6 +62,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "client1" do |c|
     c.vm.network "private_network", ip: "172.16.0.100", virtualbox__intnet: "wan"
     c.vm.hostname = "client1.virtualbox.reallyenglish.com"
+    c.vm.provision 'shell', path: 'provisioners/shell/client1.sh'
     c.vm.provision :ansible do |ansible|
       ansible.playbook = "site.yml"
       ansible.extra_vars = {
@@ -78,6 +79,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "client2" do |c|
     c.vm.network "private_network", ip: "192.168.21.100", virtualbox__intnet: "intranet"
     c.vm.hostname = "client2.virtualbox.reallyenglish.com"
+    c.vm.provision 'shell', path: 'provisioners/shell/client2.sh'
     c.vm.provision :ansible do |ansible|
       ansible.playbook = "site.yml"
       ansible.extra_vars = {
