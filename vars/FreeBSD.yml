@@ -1,0 +1,2 @@
+__npppd_db_dir: /var/db/npppd
+__npppd_conf: /usr/local/etc/npppd.conf

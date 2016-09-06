@@ -1,0 +1,5 @@
+- hosts: localhost
+  roles:
+    - ansible-role-npppd
+  vars:
+    npppd_config: ""

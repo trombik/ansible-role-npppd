@@ -1,0 +1,7 @@
+npppd_user: npppd
+npppd_group: npppd
+npppd_log_dir: /var/log/npppd
+npppd_db_dir: "{{ __npppd_db_dir }}"
+npppd_service: npppd
+npppd_conf: "{{ __npppd_conf }}"
+npppd_flags: ""

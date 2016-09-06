@@ -1,0 +1,6 @@
+---
+
+- name: Install npppd
+  pkgng:
+    name: npppd
+    state: present

@@ -1,0 +1,6 @@
+---
+
+- name: Restart npppd_config
+  service:
+    name: npppd
+    state: restarted
