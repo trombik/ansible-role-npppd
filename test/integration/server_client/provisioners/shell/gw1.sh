@@ -17,6 +17,7 @@ pass in quick on $int_if from ($int_if:network) to any tag NAT
 match out on $ext_if from ($ext_if:network) to any nat-to ($ext_if) tagged NAT
 pass out quick tagged NAT
 pass in quick on pppx tag L2TP
+pass out quick on pppx from (pppx) to any
 pass out quick on $int_if tagged L2TP
 pass out quick on $ext_if from ($ext_if) to any
 pass out quick on $int_if from ($int_if) to any
