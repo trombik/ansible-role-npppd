@@ -2,4 +2,35 @@
   roles:
     - ansible-role-npppd
   vars:
-    npppd_config: ""
+    npppd_tunnel:
+      l2tp_tunnel:
+        protocol: l2tp
+        listen_on: "{{ ansible_default_ipv4.address }}"
+    npppd_ipcp:
+      ipcp1:
+        pool-address: 192.168.100.1-192.168.100.250
+        dns-servers:
+          - 8.8.8.8
+    npppd_interface:
+      pppx0:
+        address: 192.168.100.254
+        ipcp: ipcp1
+    npppd_authentication:
+      LOCAL:
+        type: local
+        users-file: "{{ npppd_users_file }}"
+    npppd_bind:
+      - 
+        from: l2tp_tunnel
+        authenticated_by: LOCAL
+        to: pppx0
+
+    npppd_users:
+      foo:
+        password: 'password:\^'
+      bar-:
+        password: password
+        framed-ip-address: 192.168.100.1
+      buz_:
+        password: password
+        framed-ip-network: 192.168.101.0/24
