@@ -1,7 +1,9 @@
-npppd_user: npppd
-npppd_group: npppd
-npppd_log_dir: /var/log/npppd
-npppd_db_dir: "{{ __npppd_db_dir }}"
+npppd_user: _npppd
+npppd_group: _npppd
+npppd_conf_dir: /etc/npppd
 npppd_service: npppd
-npppd_conf: "{{ __npppd_conf }}"
+npppd_conf: "{{ npppd_conf_dir }}/npppd.conf"
+npppd_users_file: "{{ npppd_conf_dir }}/npppd-users"
 npppd_flags: ""
+
+npppd_users: {}

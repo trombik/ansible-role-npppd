@@ -1,0 +1,26 @@
+{% for t, tunnel in npppd_tunnel | dictsort %}
+tunnel {{ t }} protocol {{ tunnel.protocol }} {
+  listen on {{ tunnel.listen_on }}
+}
+{% endfor %}
+
+{% for i, ipcp in npppd_ipcp | dictsort %}
+ipcp {{ i }} {
+  pool-address {{ ipcp['pool-address'] }}
+  dns-servers {{ ipcp['dns-servers'] | join(' ') }}
+}
+{% endfor %}
+
+{% for i, int in npppd_interface | dictsort %}
+interface {{ i }} address {{ int['address'] }} ipcp {{ int['ipcp'] }}
+{% endfor %}
+
+{% for a, auth in npppd_authentication | dictsort %}
+authentication {{ a }} type {{ auth['type'] }} {
+  users-file "{{ auth['users-file'] }}"
+}
+{% endfor %}
+
+{% for b in npppd_bind %}
+bind tunnel from {{ b.from }} authenticated by {{ b.authenticated_by }} to {{ b.to }}
+{% endfor %}

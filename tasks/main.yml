@@ -4,25 +4,18 @@
 - include_vars: "{{ ansible_os_family }}.yml"
 
 - include: "install-{{ ansible_os_family }}.yml"
-  when: ansible_os_family == 'FreeBSD'
 
-- name: Create log directory
+- name: Create conf directory
   file:
-    path: "{{ npppd_log_dir }}"
+    path: "{{ npppd_conf_dir }}"
     mode: 0755
-    owner: "{{ npppd_user }}"
-    group: "{{ npppd_group }}"
     state: directory
-  notify: Restart npppd
 
-- name: Create db directory
-  file:
-    path: "{{ npppd_db_dir }}"
-    mode: 0755
-    owner: "{{ npppd_user }}"
-    group: "{{ npppd_group }}"
-    state: directory
-  notify: Restart npppd
+- name: Create npppd-users
+  template:
+    src: npppd-users.j2
+    dest: "{{ npppd_users_file }}"
+    mode: 0600
 
 - name: Create npppd.conf
   template:

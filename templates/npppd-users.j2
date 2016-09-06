@@ -1,0 +1,11 @@
+{% for user_name, user in npppd_users | dictsort %}
+{{ user_name }}: \
+  :password={{ user.password | replace('\\', '\\\\') | replace(':', '\c') | replace('^', '\\^') }}:\
+{% if 'framed-ip-address' in user %}
+  :framed-ip-address={{ user['framed-ip-address'] }}:\
+{% endif %}
+{% if 'framed-ip-network' in user %}
+  :framed-ip-network={{ user['framed-ip-network'] }}:
+{% endif %}
+
+{% endfor %}
