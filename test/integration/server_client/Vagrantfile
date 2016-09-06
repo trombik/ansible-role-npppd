@@ -31,6 +31,7 @@ ensure
   socket && socket.close
 end
 http_proxy = proxy_running? ? http_proxy_url : ''
+http_proxy = ''
 
 # Vagrantfile
 Vagrant.configure("2") do |config|
@@ -42,11 +43,12 @@ Vagrant.configure("2") do |config|
   config.vm.box = "trombik/ansible-openbsd-6.0-amd64"
 
   config.vm.define "gw1" do |c|
-    c.vm.network "private_network", ip: "172.16.0.254", virtualbox__intnet: "wan"
-    c.vm.network "private_network", ip: "192.168.21.254", virtualbox__intnet: "intranet"
+    c.vm.network "private_network", ip: "172.16.0.254"
+    c.vm.network "private_network", ip: "192.168.21.254"
     c.vm.hostname = "gw1.virtualbox.reallyenglish.com"
     c.vm.provision 'shell', path: 'provisioners/shell/gw1.sh'
     c.vm.provision :ansible do |ansible|
+      ansible.limit = '192.168.21.254'
       ansible.playbook = "site.yml"
       ansible.extra_vars = {
         ansible_python_interpreter: '/usr/local/bin/python',
@@ -55,12 +57,12 @@ Vagrant.configure("2") do |config|
         no_proxy: 'localhost,127.0.0.1,.example.com'
       }
       ansible.inventory_path = 'inventories/staging'
-      ansible.verbose = 'v'
+      ansible.verbose = 'vvvv'
     end
   end
 
   config.vm.define "client1" do |c|
-    c.vm.network "private_network", ip: "172.16.0.100", virtualbox__intnet: "wan"
+    c.vm.network "private_network", ip: "172.16.0.100"
     c.vm.hostname = "client1.virtualbox.reallyenglish.com"
     c.vm.provision 'shell', path: 'provisioners/shell/client1.sh'
     c.vm.provision :ansible do |ansible|
@@ -77,7 +79,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "client2" do |c|
-    c.vm.network "private_network", ip: "192.168.21.100", virtualbox__intnet: "intranet"
+    c.vm.network "private_network", ip: "192.168.21.100"
     c.vm.hostname = "client2.virtualbox.reallyenglish.com"
     c.vm.provision 'shell', path: 'provisioners/shell/client2.sh'
     c.vm.provision :ansible do |ansible|
