@@ -1,7 +1,7 @@
 npppd_tunnel:
   l2tp_tunnel:
     protocol: l2tp
-    listen_on: "{{ ansible_default_ipv4.address }}"
+    listen_on: 172.16.0.254
 npppd_ipcp:
   ipcp1:
     pool-address: 192.168.22.100-192.168.22.200
@@ -31,7 +31,8 @@ npppd_users:
     password: password
     framed-ip-network: 192.168.101.0/24
 
-isakmpd_addresses: []
+isakmpd_listen_address: 172.16.0.254
+isakmpd_addresses: {}
 isakmpd_flows:
   client:
     type: l2tp
