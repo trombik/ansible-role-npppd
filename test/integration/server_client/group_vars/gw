@@ -30,3 +30,16 @@ npppd_users:
   buz_:
     password: password
     framed-ip-network: 192.168.101.0/24
+
+isakmpd_addresses: []
+isakmpd_flows:
+  client:
+    type: l2tp
+    main:
+      auth_algorithm: hmac-sha1
+      enc_algorithm: 3des
+      group: modp1024
+    quick:
+      auth_algorithm: hmac-sha2-256
+      enc_algorithm: aes
+    psk: password
