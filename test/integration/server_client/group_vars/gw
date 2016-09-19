@@ -1,0 +1,46 @@
+npppd_tunnel:
+  l2tp_tunnel:
+    protocol: l2tp
+    listen_on: 172.16.0.254
+npppd_ipcp:
+  ipcp1:
+    pool-address: 192.168.22.100-192.168.22.200
+    dns-servers:
+      - 8.8.8.8
+npppd_interface:
+  pppx0:
+    address: 192.168.22.254
+    ipcp: ipcp1
+npppd_authentication:
+  LOCAL:
+    type: local
+    users-file: "{{ npppd_users_file }}"
+npppd_bind:
+  - 
+    from: l2tp_tunnel
+    authenticated_by: LOCAL
+    to: pppx0
+
+npppd_users:
+  foo:
+    password: password
+  bar-:
+    password: password
+    framed-ip-address: 192.168.100.1
+  buz_:
+    password: password
+    framed-ip-network: 192.168.101.0/24
+
+isakmpd_listen_address: 172.16.0.254
+isakmpd_addresses: {}
+isakmpd_flows:
+  client:
+    type: l2tp
+    main:
+      auth_algorithm: hmac-sha1
+      enc_algorithm: 3des
+      group: modp1024
+    quick:
+      auth_algorithm: hmac-sha2-256
+      enc_algorithm: aes
+    psk: password
