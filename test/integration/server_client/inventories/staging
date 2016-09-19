@@ -1,0 +1,13 @@
+[client1]
+172.16.0.100
+
+[gw]
+192.168.21.254
+
+[client2]
+192.168.21.100
+
+[all:children]
+gw
+client1
+client2
