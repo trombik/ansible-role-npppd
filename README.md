@@ -1,12 +1,12 @@
 ansible-role-npppd
 =====================
 
-A brief description of the role goes here.
+Configure OpenBSD's [npppd(8)](http://man.openbsd.org/npppd.8).
 
 Requirements
 ------------
 
-None
+Only supported platform is OpenBSD.
 
 Role Variables
 --------------
