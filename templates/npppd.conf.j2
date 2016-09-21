@@ -17,7 +17,15 @@ interface {{ i }} address {{ int['address'] }} ipcp {{ int['ipcp'] }}
 
 {% for a, auth in npppd_authentication | dictsort %}
 authentication {{ a }} type {{ auth['type'] }} {
+{% if auth['type'] == 'local' %}
   users-file "{{ auth['users-file'] }}"
+{% elif auth['type'] == 'radius' %}
+  authentication-server {
+{% for address, server in auth['servers'] | dictsort %}
+    address {{ address }} {% if 'port' in server %}port {{ server['port'] }} {% endif %}secret "{{ server['secret'] }}"
+{% endfor %}
+  }
+{% endif %}
 }
 {% endfor %}
 
