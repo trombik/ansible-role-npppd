@@ -7,3 +7,8 @@ npppd_users_file: "{{ npppd_conf_dir }}/npppd-users"
 npppd_flags: ""
 
 npppd_users: {}
+npppd_tunnel: {}
+npppd_ipcp: {}
+npppd_interface: {}
+npppd_authentication: {}
+npppd_bind: []
