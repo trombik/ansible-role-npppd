@@ -1,13 +1,16 @@
 {% for t, tunnel in npppd_tunnel | dictsort %}
 tunnel {{ t }} protocol {{ tunnel.protocol }} {
-  listen on {{ tunnel.listen_on }}
+{% for l in tunnel.options %}
+    {{ l }}
+{% endfor %}
 }
 {% endfor %}
 
-{% for i, ipcp in npppd_ipcp | dictsort %}
-ipcp {{ i }} {
-  pool-address {{ ipcp['pool-address'] }}
-  dns-servers {{ ipcp['dns-servers'] | join(' ') }}
+{% for ipcp, options in npppd_ipcp | dictsort %}
+ipcp {{ ipcp }} {
+{% for option in options %}
+  {{ option }}
+{% endfor %}
 }
 {% endfor %}
 
@@ -17,12 +20,20 @@ interface {{ i }} address {{ int['address'] }} ipcp {{ int['ipcp'] }}
 
 {% for a, auth in npppd_authentication | dictsort %}
 authentication {{ a }} type {{ auth['type'] }} {
-{% if auth['type'] == 'local' %}
-  users-file "{{ auth['users-file'] }}"
-{% elif auth['type'] == 'radius' %}
+{% if 'options' in auth %}
+{% for option in auth['options'] %}
+  {{ option }}
+{% endfor %}
+{% endif %}
+{% if auth['type'] == 'radius' %}
   authentication-server {
 {% for address, server in auth['servers'] | dictsort %}
     address {{ address }} {% if 'port' in server %}port {{ server['port'] }} {% endif %}secret "{{ server['secret'] }}"
+{% if 'options' in server %}
+{% for option in server['options'] %}
+    {{ option }}
+{% endfor %}
+{% endif %}
 {% endfor %}
   }
 {% endif %}

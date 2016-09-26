@@ -1,7 +1,21 @@
 #!/bin/sh
+export DEBIAN_FRONTEND=noninteractive
+packages="l2tp-ipsec-vpn lsof"
+
 ip route add 192.168.0.0/16 dev eth1 || true
 echo 127.0.0.1 `hostname` >> /etc/hosts
-DEBIAN_FRONTEND=noninteractive apt-get -y install l2tp-ipsec-vpn lsof
+if apt-get -y install ${packages}; then
+    :
+else
+    echo "apt-get failed, attempting to fix it by \"apt-get update\""
+    apt-get update
+    if apt-get -y install ${packages}; then
+        :
+    else
+        echo "cannot install ${packages}"
+        exit 1
+    fi
+fi
 for line in `ls /proc/sys/net/ipv4/conf/*/send_redirects`; do echo 0 > $line ;done
 
 cat > /etc/ipsec.conf <<__EOF__

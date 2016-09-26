@@ -11,7 +11,7 @@ users_file  = '/etc/npppd/npppd-users'
 
 describe file(config) do
   it { should be_file }
-  its(:content) { should match /^tunnel l2tp_tunnel protocol l2tp \{\n\s+listen on 10\.0\.2\.15\n\}$/ }
+  its(:content) { should match /^tunnel l2tp_tunnel protocol l2tp \{\n\s+listen on 10\.0\.2\.15\n\s+lcp-keepalive yes\n\s+tcp-mss-adjust yes\n\}$/ }
   # tunnel l2tp_tunnel protocol l2tp {
   #   listen on 10.0.2.15
   # }
