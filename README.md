@@ -58,13 +58,11 @@ a dict of ipcp.
 
     npppd_ipcp:
       ipcp1:
-        pool-address: 192.168.100.1-192.168.100.250
-        dns-servers:
-          - 8.8.8.8
+        - pool-address 192.168.100.1-192.168.100.250
+        - dns-servers 8.8.8.8
       ipcp2:
-        pool-address: 192.168.200.1-192.168.200.250
-        dns-servers:
-          - 8.8.8.8
+        - pool-address 192.168.200.1-192.168.200.250
+        - dns-servers 8.8.8.8
 
 ## npppd\_authentication
 
@@ -74,7 +72,7 @@ The value of the key is a dict of configuration.
 | key | value |
 |-----|-------|
 | type | `radius` or `local` |
-| other key | type-dependant, see below |
+| options | array of lines of configurations for the authentication (optional) |
 
 ### type: local
 
@@ -84,7 +82,8 @@ When type is `local`, `users-file` key must exist. the value should be path to
     npppd_authentication:
       LOCAL:
         type: local
-        users-file: "{{ npppd_users_file }}"
+        options:
+          - users-file "{{ npppd_users_file }}"
 
 ### type: radius
 
@@ -94,16 +93,24 @@ When type is `radius`, `servers` key must exist. The value is a dict of servers.
 |-----|-------|
 | port | port number of radius (optional) |
 | secret | password for radius |
+| options | array of lines of configurations for the server (optional) |
 
     npppd_authentication:
       RADIUS:
         type: radius
+        options:
+          - strip-nt-domain no
         servers:
           127.0.0.1:
             port: 1812
             secret: password
-          other.radius.host:
-            secret: password2
+            options:
+              - timeout 10
+          server2.example.org:
+            port: 1812
+            secret: password
+            options:
+              - timeout 10
 
 ## npppd\_bind
 
