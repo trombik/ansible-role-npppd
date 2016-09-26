@@ -37,7 +37,8 @@ the tunnel for PPP.
     npppd_tunnel:
       l2tp_tunnel:
         protocol: l2tp
-        listen_on: "{{ ansible_default_ipv4.address }}"
+        options:
+          - "listen_on {{ ansible_default_ipv4.address }}"
 
 ## npppd\_interface
 

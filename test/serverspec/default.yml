@@ -5,7 +5,10 @@
     npppd_tunnel:
       l2tp_tunnel:
         protocol: l2tp
-        listen_on: "{{ ansible_default_ipv4.address }}"
+        options:
+          - "listen on {{ ansible_default_ipv4.address }}"
+          - "lcp-keepalive yes"
+          - "tcp-mss-adjust yes"
     npppd_ipcp:
       ipcp1:
         pool-address: 192.168.100.1-192.168.100.250

@@ -1,6 +1,8 @@
 {% for t, tunnel in npppd_tunnel | dictsort %}
 tunnel {{ t }} protocol {{ tunnel.protocol }} {
-  listen on {{ tunnel.listen_on }}
+{% for l in tunnel.options %}
+    {{ l }}
+{% endfor %}
 }
 {% endfor %}
 
