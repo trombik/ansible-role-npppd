@@ -133,7 +133,6 @@ Example Playbook
 See [npppd.conf(5)](http://man.openbsd.org/npppd.conf.5).
 
 ## Simple L2TP configuration
-
     - hosts: localhost
       roles:
         - ansible-role-npppd
@@ -141,12 +140,14 @@ See [npppd.conf(5)](http://man.openbsd.org/npppd.conf.5).
         npppd_tunnel:
           l2tp_tunnel:
             protocol: l2tp
-            listen_on: "{{ ansible_default_ipv4.address }}"
+            options:
+              - "listen on {{ ansible_default_ipv4.address }}"
+              - "lcp-keepalive yes"
+              - "tcp-mss-adjust yes"
         npppd_ipcp:
           ipcp1:
-            pool-address: 192.168.100.1-192.168.100.250
-            dns-servers:
-              - 8.8.8.8
+            - pool-address 192.168.100.1-192.168.100.250
+            - dns-servers 8.8.8.8
         npppd_interface:
           pppx0:
             address: 192.168.100.254
@@ -154,7 +155,8 @@ See [npppd.conf(5)](http://man.openbsd.org/npppd.conf.5).
         npppd_authentication:
           LOCAL:
             type: local
-            users-file: "{{ npppd_users_file }}"
+            options:
+              - 'users-file "{{ npppd_users_file }}"'
         npppd_bind:
           -
             from: l2tp_tunnel
@@ -180,12 +182,12 @@ See [npppd.conf(5)](http://man.openbsd.org/npppd.conf.5).
         npppd_tunnel:
           l2tp_tunnel:
             protocol: l2tp
-            listen_on: "{{ ansible_default_ipv4.address }}"
+            options:
+              - "listen on {{ ansible_default_ipv4.address }}"
         npppd_ipcp:
           ipcp1:
-            pool-address: 192.168.100.1-192.168.100.250
-            dns-servers:
-              - 8.8.8.8
+            - pool-address 192.168.100.1-192.168.100.250
+            - dns-servers 8.8.8.8
         npppd_interface:
           pppx0:
             address: 192.168.100.254
@@ -193,10 +195,14 @@ See [npppd.conf(5)](http://man.openbsd.org/npppd.conf.5).
         npppd_authentication:
           RADIUS:
             type: radius
+            options:
+              - strip-nt-domain no
             servers:
               127.0.0.1:
                 port: 1812
                 secret: password
+                options:
+                  - timeout 10
         npppd_bind:
           -
             from: l2tp_tunnel
