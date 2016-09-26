@@ -18,10 +18,14 @@
     npppd_authentication:
       RADIUS:
         type: radius
+        options:
+          - strip-nt-domain no
         servers:
           127.0.0.1:
             port: 1812
             secret: password
+            options:
+              - timeout 10
     npppd_bind:
       - 
         from: l2tp_tunnel

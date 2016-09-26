@@ -24,7 +24,7 @@ describe file(config) do
   its(:content) { should match /^interface pppx0 address 192\.168\.100\.254 ipcp ipcp1$/ }
   # interface pppx0 address 192.168.100.254 ipcp ipcp1
   # 
-  its(:content) { should match /^authentication RADIUS type radius \{\n\s+authentication-server {\n\s+address 127\.0\.0\.1 port 1812 secret "password"\n\s+}\n}/ }
+  its(:content) { should match /^authentication RADIUS type radius \{\n\s+strip-nt-domain no\n\s+authentication-server {\n\s+address 127\.0\.0\.1 port 1812 secret "password"\n\s+timeout 10\n\s+}\n}/ }
   # authentication RADIUS type radius {
   #   authentication-server {
   #     address 127.0.0.1 port 1812 secret "password"

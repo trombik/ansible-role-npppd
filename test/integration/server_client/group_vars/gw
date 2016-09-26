@@ -14,7 +14,8 @@ npppd_interface:
 npppd_authentication:
   LOCAL:
     type: local
-    users-file: "{{ npppd_users_file }}"
+    options:
+      - 'users-file "{{ npppd_users_file }}"'
 npppd_bind:
   - 
     from: l2tp_tunnel
