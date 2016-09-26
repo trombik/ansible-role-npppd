@@ -11,9 +11,8 @@
           - "tcp-mss-adjust yes"
     npppd_ipcp:
       ipcp1:
-        pool-address: 192.168.100.1-192.168.100.250
-        dns-servers:
-          - 8.8.8.8
+        - pool-address 192.168.100.1-192.168.100.250
+        - dns-servers 8.8.8.8
     npppd_interface:
       pppx0:
         address: 192.168.100.254

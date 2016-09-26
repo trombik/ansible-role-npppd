@@ -5,9 +5,8 @@ npppd_tunnel:
       - listen on 172.16.0.254
 npppd_ipcp:
   ipcp1:
-    pool-address: 192.168.22.100-192.168.22.200
-    dns-servers:
-      - 8.8.8.8
+    - pool-address 192.168.22.100-192.168.22.200
+    - dns-servers 8.8.8.8
 npppd_interface:
   pppx0:
     address: 192.168.22.254

@@ -6,10 +6,11 @@ tunnel {{ t }} protocol {{ tunnel.protocol }} {
 }
 {% endfor %}
 
-{% for i, ipcp in npppd_ipcp | dictsort %}
-ipcp {{ i }} {
-  pool-address {{ ipcp['pool-address'] }}
-  dns-servers {{ ipcp['dns-servers'] | join(' ') }}
+{% for ipcp, options in npppd_ipcp | dictsort %}
+ipcp {{ ipcp }} {
+{% for option in options %}
+  {{ option }}
+{% endfor %}
 }
 {% endfor %}
 
