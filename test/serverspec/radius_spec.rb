@@ -42,9 +42,6 @@ end
 
 ports.each do |p|
   describe port(p) do
-    it do
-      pending('serverspec does not work with netstat in OpenBSD')
-      should be_listening.with('udp')
-    end
+    it { should be_listening.with('udp') }
   end
 end
