@@ -14,6 +14,7 @@ provisioner:
   ansible_verbose: true
   ansible_extra_flags: <%= ENV['ANSIBLE_EXTRA_FLAGS'] %>
   http_proxy: <%= ENV['ANSIBLE_PROXY'] %>
+  idempotency_test: true
   additional_copy_path:
     - extra_modules
     - filter_plugins
@@ -46,14 +47,14 @@ suites:
   - name: default
     provisioner:
       name: ansible_playbook
-      playbook: test/serverspec/default.yml
+      playbook: tests/serverspec/default.yml
     verifier:
       name: shell
-      command: rspec -c -f d -I test/serverspec test/serverspec/default_spec.rb
+      command: rspec -c -f d -I tests/serverspec tests/serverspec/default_spec.rb
   - name: radius
     provisioner:
       name: ansible_playbook
-      playbook: test/serverspec/radius.yml
+      playbook: tests/serverspec/radius.yml
     verifier:
       name: shell
-      command: rspec -c -f d -I test/serverspec test/serverspec/radius_spec.rb
+      command: rspec -c -f d -I tests/serverspec tests/serverspec/radius_spec.rb

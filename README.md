@@ -1,15 +1,12 @@
-ansible-role-npppd
-=====================
+# ansible-role-npppd
 
 Configure OpenBSD's [npppd(8)](http://man.openbsd.org/npppd.8).
 
-Requirements
-------------
+# Requirements
 
 Only supported platform is OpenBSD.
 
-Role Variables
---------------
+# Role Variables
 
 The role dose not yet support all configurations found in
 [npppd.conf(5)](http://man.openbsd.org/npppd.conf.5).
@@ -95,6 +92,109 @@ When type is `radius`, `servers` key must exist. The value is a dict of servers.
 | secret | password for radius |
 | options | array of lines of configurations for the server (optional) |
 
+```yaml
+npppd_authentication:
+  RADIUS:
+    type: radius
+    options:
+      - strip-nt-domain no
+    servers:
+      127.0.0.1:
+        port: 1812
+        secret: password
+        options:
+          - timeout 10
+      server2.example.org:
+        port: 1812
+        secret: password
+        options:
+          - timeout 10
+```
+
+## npppd\_bind
+
+`npppd_bind` binds tunnel, authetication, and interface
+
+```yaml
+npppd_bind:
+  -
+    from: l2tp_tunnel
+    authenticated_by: LOCAL
+    to: pppx0
+```
+
+# Dependencies
+
+None
+
+# Example Playbook
+
+See [npppd.conf(5)](http://man.openbsd.org/npppd.conf.5).
+
+## Simple L2TP configuration
+
+```yaml
+- hosts: localhost
+  roles:
+    - ansible-role-npppd
+  vars:
+    npppd_tunnel:
+      l2tp_tunnel:
+        protocol: l2tp
+        options:
+          - "listen on {{ ansible_default_ipv4.address }}"
+          - "lcp-keepalive yes"
+          - "tcp-mss-adjust yes"
+    npppd_ipcp:
+      ipcp1:
+        - pool-address 192.168.100.1-192.168.100.250
+        - dns-servers 8.8.8.8
+    npppd_interface:
+      pppx0:
+        address: 192.168.100.254
+        ipcp: ipcp1
+    npppd_authentication:
+      LOCAL:
+        type: local
+        options:
+          - 'users-file "{{ npppd_users_file }}"'
+    npppd_bind:
+      -
+        from: l2tp_tunnel
+        authenticated_by: LOCAL
+        to: pppx0
+
+    npppd_users:
+      foo:
+        password: 'password:\^'
+      bar-:
+        password: password
+        framed-ip-address: 192.168.100.1
+      buz_:
+        password: password
+        framed-ip-network: 192.168.101.0/24
+```
+
+## Same but authenticates users by RADIUS
+
+```yaml
+- hosts: localhost
+  roles:
+    - ansible-role-npppd
+  vars:
+    npppd_tunnel:
+      l2tp_tunnel:
+        protocol: l2tp
+        options:
+          - "listen on {{ ansible_default_ipv4.address }}"
+    npppd_ipcp:
+      ipcp1:
+        - pool-address 192.168.100.1-192.168.100.250
+        - dns-servers 8.8.8.8
+    npppd_interface:
+      pppx0:
+        address: 192.168.100.254
+        ipcp: ipcp1
     npppd_authentication:
       RADIUS:
         type: radius
@@ -106,112 +206,16 @@ When type is `radius`, `servers` key must exist. The value is a dict of servers.
             secret: password
             options:
               - timeout 10
-          server2.example.org:
-            port: 1812
-            secret: password
-            options:
-              - timeout 10
-
-## npppd\_bind
-
-`npppd_bind` binds tunnel, authetication, and interface
-
     npppd_bind:
       -
         from: l2tp_tunnel
-        authenticated_by: LOCAL
+        authenticated_by: RADIUS
         to: pppx0
+```
 
-Dependencies
-------------
+# License
 
-None
-
-Example Playbook
-----------------
-
-See [npppd.conf(5)](http://man.openbsd.org/npppd.conf.5).
-
-## Simple L2TP configuration
-    - hosts: localhost
-      roles:
-        - ansible-role-npppd
-      vars:
-        npppd_tunnel:
-          l2tp_tunnel:
-            protocol: l2tp
-            options:
-              - "listen on {{ ansible_default_ipv4.address }}"
-              - "lcp-keepalive yes"
-              - "tcp-mss-adjust yes"
-        npppd_ipcp:
-          ipcp1:
-            - pool-address 192.168.100.1-192.168.100.250
-            - dns-servers 8.8.8.8
-        npppd_interface:
-          pppx0:
-            address: 192.168.100.254
-            ipcp: ipcp1
-        npppd_authentication:
-          LOCAL:
-            type: local
-            options:
-              - 'users-file "{{ npppd_users_file }}"'
-        npppd_bind:
-          -
-            from: l2tp_tunnel
-            authenticated_by: LOCAL
-            to: pppx0
-
-        npppd_users:
-          foo:
-            password: 'password:\^'
-          bar-:
-            password: password
-            framed-ip-address: 192.168.100.1
-          buz_:
-            password: password
-            framed-ip-network: 192.168.101.0/24
-
-## Same but authenticates users by RADIUS
-
-    - hosts: localhost
-      roles:
-        - ansible-role-npppd
-      vars:
-        npppd_tunnel:
-          l2tp_tunnel:
-            protocol: l2tp
-            options:
-              - "listen on {{ ansible_default_ipv4.address }}"
-        npppd_ipcp:
-          ipcp1:
-            - pool-address 192.168.100.1-192.168.100.250
-            - dns-servers 8.8.8.8
-        npppd_interface:
-          pppx0:
-            address: 192.168.100.254
-            ipcp: ipcp1
-        npppd_authentication:
-          RADIUS:
-            type: radius
-            options:
-              - strip-nt-domain no
-            servers:
-              127.0.0.1:
-                port: 1812
-                secret: password
-                options:
-                  - timeout 10
-        npppd_bind:
-          -
-            from: l2tp_tunnel
-            authenticated_by: RADIUS
-            to: pppx0
-
-License
--------
-
+```
 Copyright (c) 2016 Tomoyuki Sakurai <tomoyukis@reallyenglish.com>
 
 Permission to use, copy, modify, and distribute this software for any
@@ -225,9 +229,9 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+```
 
-Author Information
-------------------
+# Author Information
 
 Tomoyuki Sakurai <tomoyukis@reallyenglish.com>
 
