@@ -27,7 +27,7 @@
             options:
               - timeout 10
     npppd_bind:
-      - 
+      -
         from: l2tp_tunnel
         authenticated_by: RADIUS
         to: pppx0
